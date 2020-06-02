@@ -1,11 +1,12 @@
 class Product:
+    ''' ************* PRODUCT ************* '''
     def __init__(self, name, price, recipe):
         self.name = name
         self.price = price
         self.recipe = recipe
 
     def getPrice(self):
-        print(self.price)
+        return self.price
 
     def make(self):
         print(f"Making {self.name}:")
@@ -14,40 +15,40 @@ class Product:
             print("\tDispencing", rec)
 
 
-# test = Product("white", 1.00, ['coffee', 'sugar', 'creamer', 'water'])
-
-# test.getPrice()
-
-# test.make()
-
 class Selector:
-    def __init__(self, choice):
-        self.choice = choice
+    ''' ************* Selector ************* '''
+    def __init__(self, choices):
+        self.choices = choices
 
-    def select(self):
-        if self.choice == 1:
-            prod = Product("black", 0.35, ["coffee","water"])
-        elif self.choice == 2:
-            prod = Product("white", 0.35, ["coffee", "creamer", "water"])
-        elif self.choice == 3:
-            prod = Product("sweet", 0.35, ["coffee", "sugar", "water"])
-        elif self.choice == 4:
-            prod = Product("white & sweet", 0.35, ["coffee", "sugar", "creamer" "water"])
-        elif self.choice == 5:
-            prod = Product("bouillon", 0.25, ["boullionPowder", "water"])
-        return prod
-        
+        print(self.choices)
 
-# selection = Selector(3).select()
+    def select(self, choice):
 
-# selection.make()
+        if choice == "1":
+            val = self.choices[0]
+
+        elif choice == "2":
+            val = self.choices[1]
+
+        elif choice == "3":
+            val = self.choices[2]
+  
+        elif choice == "4":
+            val = self.choices[3]
+ 
+        elif choice == "5":
+            val = self.choices[4]
+            
+        return val
+
 
 class CashBox:
+    ''' ************* CashBox ************* '''
     def __init__(self, credit, totalReceived):
         self.credit = credit
         self.totalReceived = totalReceived
 
-        self.coins = [0.50, 0.25, 0.10, 0.05]
+        self.coins = [50, 25, 10, 5]
 
     def deposit(self, amount):
         if amount in self.coins:
@@ -55,7 +56,7 @@ class CashBox:
             print(f"Depositing {amount}. You have {self.totalReceived} cents credit.")
             return amount
         else:
-            return "Only half dollars, quarters, dimes, and nickles are accepted"
+            print("We only take half-dollars, quarters, dimes, and nickels.\nCoin(s) returned.")
 
     def haveYou(self, amount):
         if self.totalReceived >= amount:
@@ -71,19 +72,21 @@ class CashBox:
         return self.totalReceived
 
     def returnCoins(self):
-        return self.credit
-
-
-
-# c = CashBox(0.25, 0.50)
-
-# print(c.returnCoins())
-
+        self.totalReceived = 0
+        
 
 class CoffeeMachine:
-
+    ''' ************* CoffeeMachine ************* '''
     def __init__(self):
-        self.total = 0
+        self.black = Product("black", 35, ["coffee", "water"])
+        self.white = Product("white", 35, ["coffee", "creamer", "water"])
+        self.sweet = Product("sweet", 35, ["coffee", "sugar", "water"])
+        self.whiteSweet = Product("white & sweet", 35, ["coffee", "sugar", "creamer", "water"])
+        self.bouillon = Product("bouillon", 25, ["boullionPowder", "water"])
+
+        self.cb = CashBox(0, 0)
+
+        self.sel = Selector([self.black, self.white, self.sweet, self.whiteSweet, self.bouillon])
 
     def oneAction(self):
         print("PRODUCT LIST: all 35 cents, except bouillon (25 cents) \n 1=black, 2=white, 3=sweet, 4=white & sweet, 5=bouillon \nSample commands: insert 25, select 1.")
@@ -91,31 +94,42 @@ class CoffeeMachine:
 
         splitCommand = command.split(" ")
 
-        c = CashBox(0.00, 0.00)
-
         if command == "quit":
             return False
 
-        if splitCommand[0].lower() == "insert":
-            c.deposit(float(splitCommand[1]))
-        # elif splitCommand[0].lower() == "select":
-        #     c.haveYou()
+        elif splitCommand[0].lower() == "insert":
+            self.cb.deposit(int(splitCommand[1]))
+
+        elif splitCommand[0].lower() == "select":
+            choice = self.sel.select(splitCommand[1])
+            cost = choice.getPrice()
+            if self.cb.haveYou(cost):
+                choice.make()
+                self.cb.deduct(cost)
+                print(f"Returning {self.cb.total()} cents. ") 
+                self.cb.returnCoins()
+            else:
+                print("Sorry. Not enough money deposited.")
+        elif command == "cancel":
+            print(f"Returning {self.cb.total()} cents.") 
+            self.cb.returnCoins()
+            
         else:
-            print("Command not recognized")
-            
+            print("Invalid command.")
+
         return True
+
+    def totalCash(self):
+        return self.cb.total()
             
-
-# c = CoffeeMachine()
-
-# c.oneAction()
 
 def main():
+    ''' ************* Main ************* '''
     m = CoffeeMachine()
     while m.oneAction():
         pass
-    # total = m.totalCash()
-    # print(f"Total cash: ${total/100:.2f}")
+    total = m.totalCash()
+    print(f"Total cash: ${total/100:.2f}")
 
 if __name__ == "__main__":
     main()
