@@ -52,7 +52,8 @@ class CashBox:
     def deposit(self, amount):
         if amount in self.coins:
             self.totalReceived += amount
-            return f"Depositing {amount}. You have {self.totalReceived} cents credit."
+            print(f"Depositing {amount}. You have {self.totalReceived} cents credit.")
+            return amount
         else:
             return "Only half dollars, quarters, dimes, and nickles are accepted"
 
@@ -80,6 +81,10 @@ class CashBox:
 
 
 class CoffeeMachine:
+
+    def __init__(self):
+        self.total = 0
+
     def oneAction(self):
         print("PRODUCT LIST: all 35 cents, except bouillon (25 cents) \n 1=black, 2=white, 3=sweet, 4=white & sweet, 5=bouillon \nSample commands: insert 25, select 1.")
         command = input("Your command: ")
@@ -88,14 +93,29 @@ class CoffeeMachine:
 
         c = CashBox(0.00, 0.00)
 
+        if command == "quit":
+            return False
+
         if splitCommand[0].lower() == "insert":
-            print(c.deposit(float(splitCommand[1])))
-        elif splitCommand[0].lower() == "select":
-            pass
+            c.deposit(float(splitCommand[1]))
+        # elif splitCommand[0].lower() == "select":
+        #     c.haveYou()
         else:
             print("Command not recognized")
             
+        return True
+            
 
-c = CoffeeMachine()
+# c = CoffeeMachine()
 
-c.oneAction()
+# c.oneAction()
+
+def main():
+    m = CoffeeMachine()
+    while m.oneAction():
+        pass
+    # total = m.totalCash()
+    # print(f"Total cash: ${total/100:.2f}")
+
+if __name__ == "__main__":
+    main()
