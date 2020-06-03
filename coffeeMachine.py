@@ -29,7 +29,7 @@ class Product:
 
 
 class Selector:
-    ''' ************* Selector ************* '''
+    ''' Controls which product was selected '''
     def __init__(self, choices):
         ''' initializes which product the user chose '''
         self.choices = choices
@@ -55,7 +55,7 @@ class Selector:
 
 
 class CashBox:
-    ''' ************* CashBox ************* '''
+    ''' controls receiving cash and returning cash  '''
     def __init__(self, credit, totalReceived):
         ''' initializes credit and total received amounts '''
         self.credit = credit
@@ -94,7 +94,7 @@ class CashBox:
         
 
 class CoffeeMachine:
-    ''' ************* CoffeeMachine ************* '''
+    ''' handles logic for products, selector, and cashbox '''
     def __init__(self):
         ''' initialize the products, cashbox, and selector. It passes the list of Product objects to the Selector constructor. '''
         self.black = Product("black", 35, ["coffee", "water"])
